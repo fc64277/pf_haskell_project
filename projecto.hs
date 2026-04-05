@@ -10,7 +10,7 @@
 chunksOf :: Int -> [a] -> [[a]]
 chunksOf 0 _ = []
 chunksOf _ [] = []
-chunksOf n xs = take n xs :  chunksOf n (drop n xs)
+chunksOf n xs = take n xs : chunksOf n (drop n xs)
 
 -- | Função de ativação sigmoid.
 -- Exemplo: sigmoid 0 == 0.5
@@ -24,7 +24,8 @@ sigmoid' x = x * (1 - x)
 
 -- | Transpõe uma matriz (troca linhas por colunas).
 -- Exemplo: transpose [[1,2],[3,4],[5,6]] == [[1,3,5],[2,4,6]]
--- transpose :: [[a]] -> [[a]]
+transpose :: [[a]] -> [[a]]
+transpose xss = [[xs !! i | xs <- xss] | i <- [0..length (head xss) - 1]]
 
 -- | Multiplica uma matriz por um vetor: y[i] = sum(W[i][j] * x[j]).
 -- Exemplo: multMatrix [[1,0],[0,1]] [3,4] == [3,4]
