@@ -8,6 +8,7 @@
 -- | Divide uma lista em grupos de tamanho n.
 -- Exemplo: chunksOf 2 [1,2,3,4,5] == [[1,2],[3,4],[5]]
 chunksOf :: Int -> [a] -> [[a]]
+chunksOf 0 _ = []
 chunksOf _ [] = []
 chunksOf n xs = take n xs : chunksOf n (drop n xs)
 
