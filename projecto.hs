@@ -9,7 +9,7 @@
 -- Exemplo: chunksOf 2 [1,2,3,4,5] == [[1,2],[3,4],[5]]
 chunksOf :: Int -> [a] -> [[a]]
 chunksOf _ [] = []
-chunksOf n xs = (take n xs) : (chunksOf n (drop n xs))
+chunksOf n xs = take n xs : chunksOf n (drop n xs)
 
 -- | Função de ativação sigmoid.
 -- Exemplo: sigmoid 0 == 0.5
