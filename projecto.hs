@@ -1,4 +1,4 @@
--- Diogo Borges 64277
+-- Diogo Borges     64277
 -- Pedro Batalheiro 62271
 
 --
@@ -38,6 +38,7 @@ multMatrix xss ys = [sum (zipWith (*) xs ys) | xs <- xss]
 -- Exemplo: somaVectorial [1,2] [3,4] == [4,6]
 somaVectorial :: [Double] -> [Double] -> [Double]
 somaVectorial = zipWith (+)
+
 --
 -- ENTREGA 2
 --
