@@ -10,15 +10,17 @@
 chunksOf :: Int -> [a] -> [[a]]
 chunksOf 0 _ = []
 chunksOf _ [] = []
-chunksOf n xs = take n xs : chunksOf n (drop n xs)
+chunksOf n xs = take n xs :  chunksOf n (drop n xs)
 
 -- | Função de ativação sigmoid.
 -- Exemplo: sigmoid 0 == 0.5
--- sigmoid :: Double -> Double
+sigmoid :: Double -> Double
+sigmoid x = 1 / (1 + exp (-x))
 
 -- | Derivada da sigmoid (em termos da saída, não da entrada).
--- Exemplo: sigmoid’ 0.5 == 0.25
--- sigmoid' :: Double -> Double
+-- Exemplo: sigmoid' 0.5 == 0.25
+sigmoid' :: Double -> Double
+sigmoid' x = x * (1 - x)
 
 -- | Transpõe uma matriz (troca linhas por colunas).
 -- Exemplo: transpose [[1,2],[3,4],[5,6]] == [[1,3,5],[2,4,6]]
