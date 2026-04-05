@@ -32,8 +32,8 @@ sigmoid' x = x * (1 - x)
 
 -- | Soma ponto-a-ponto de dois vetores.
 -- Exemplo: somaVectorial [1,2] [3,4] == [4,6]
--- somaVectorial :: [Double] -> [Double] -> [Double]
-
+somaVectorial :: [Double] -> [Double] -> [Double]
+somaVectorial = zipWith (+)
 --
 -- ENTREGA 2
 --
