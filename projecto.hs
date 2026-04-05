@@ -31,7 +31,8 @@ transpose xss = [x | (x:_) <- xss] : transpose [xs | (_:xs) <- xss]
 
 -- | Multiplica uma matriz por um vetor: y[i] = sum(W[i][j] * x[j]).
 -- Exemplo: multMatrix [[1,0],[0,1]] [3,4] == [3,4]
--- multMatrix :: [[Double]] -> [Double] -> [Double]
+multMatrix :: [[Double]] -> [Double] -> [Double]
+multMatrix xss ys = [sum (zipWith (*) xs ys) | xs <- xss]
 
 -- | Soma ponto-a-ponto de dois vetores.
 -- Exemplo: somaVectorial [1,2] [3,4] == [4,6]
