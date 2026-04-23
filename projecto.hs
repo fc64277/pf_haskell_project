@@ -102,7 +102,12 @@ forwardPass input = foldl propag [input] -- aplica a propagação da entrada pel
 
 -- | Executa um passo de backpropagation dado uma taxa de aprendizagem, 
 -- o input e o output esperado para um exemplo concreto.
--- backPropagation :: Double -> [Double] -> [Double] -> Network -> Network
+backPropagation :: Double -> [Double] -> [Double] -> Network -> Network
+backPropagation _ _ _ [] = [] 
+backPropagation eta input expOut (ls:l) = 
+    where
+        output = forwardPass input net
+        erro = outputError (last output) (last expOut)
 
 --
 -- ENTREGA 3
