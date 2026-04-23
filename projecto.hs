@@ -58,14 +58,14 @@ type Network = [Layer] -- newtype deve ser usado quando apenas tem um atributo
 -- Exemplo: length (buildNetwork 2 [4,1] (repeat 0.1)) == 2
 buildNetwork :: Int -> [Int] -> [Double] -> Network
 
-buildNetwork _ [] _ = [] -- quando não há mais layers
-buildNetwork inputSize (l:ls) vals = layer : buildNetwork l ls rest -- adiciona layer à network e chama a função recursivamente
+buildNetwork _ [] _ = [] -- quando não há mais neurónios
+buildNetwork inputSize (n:ns) vals = layer : buildNetwork n ns rest -- adiciona layer à network e chama a função recursivamente
   where
-    numW    = l * inputSize -- obtem numero de weights para criar
+    numW    = n * inputSize -- obtem numero de weights para criar
     weights = chunksOf inputSize (take numW vals) -- fazemos chunks de tamanho size, de numW elementos de vals
-    biases  = take l (drop numW vals) -- cria as biases, pegando em l vals, excluindo os que já foram usados como pesos
+    biases  = take n (drop numW vals) -- cria as biases, pegando em l vals, excluindo os que já foram usados como pesos
     layer   = Layer weights biases -- cria o layer
-    rest    = drop (numW + l) vals -- guarda o resto dos valores que ainda não foram utilizados
+    rest    = drop (numW + n) vals -- guarda o resto dos valores que ainda não foram utilizados
 
 -- Para facilitar, vamos usar uma matriz dos pesos por cada camada (W ∈ Rm×n), 
 -- bem como um vector dos bias (b ∈ Rm). O array de output de cada camada
@@ -80,10 +80,12 @@ outputError = zipWith (-)
 
 -- | Erro quadrático médio entre previsão e alvo.
 -- Exemplo: mse [1.0] [0.0] == 1.0
--- mse :: [Double] -> [Double] -> Double
+mse :: [Double] -> [Double] -> Double
+mse y_prev y_esp = sum (map (**2.0) (outputError y_prev y_esp))
 
 -- | MSE médio sobre um conjunto de previsões.
 -- msePredictions :: [[Double]] -> [[Double]] -> Double
+-- msePredictions (prev : prevs) (esp : esps) = (mse prev esp) : [(msePredictions prevs esps)]
 
 -- | Propaga a entrada pela rede e devolve todas as ativações,
 -- da entrada até à saída: [entrada, act1, act2, ..., saída].
