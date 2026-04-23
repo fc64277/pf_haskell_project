@@ -54,12 +54,6 @@ data Layer = Layer {pesos ::[[Double]],
 -- Rede neuronal
 type Network = [Layer] -- newtype deve ser usado quando apenas tem um atributo
 
-
--- Para facilitar, vamos usar uma matriz dos pesos por cada camada (W ∈ Rm×n), 
--- bem como um vector dos bias (b ∈ Rm). O array de output de cada camada
--- é definido por:
--- y = σ(W x + b)
-
 -- | Constrói uma rede neuronal.
 -- Exemplo: length (buildNetwork 2 [4,1] (repeat 0.1)) == 2
 buildNetwork :: Int -> [Int] -> [Double] -> Network
@@ -73,10 +67,16 @@ buildNetwork inputSize (l:ls) vals = layer : buildNetwork l ls rest -- adiciona 
     layer   = Layer weights biases -- cria o layer
     rest    = drop (numW + l) vals -- guarda o resto dos valores que ainda não foram utilizados
 
+-- Para facilitar, vamos usar uma matriz dos pesos por cada camada (W ∈ Rm×n), 
+-- bem como um vector dos bias (b ∈ Rm). O array de output de cada camada
+-- é definido por:
+-- y = σ(W x + b)
+-- Esse é o ^y, y previsto
 
 -- | Diferença entre previsão e alvo (por elemento).
 -- Exemplo: outputError [0.9] [1.0] == [-0.1]
--- outputError :: [Double] -> [Double] -> [Double]
+outputError :: [Double] -> [Double] -> [Double]
+outputError = zipWith (-)
 
 -- | Erro quadrático médio entre previsão e alvo.
 -- Exemplo: mse [1.0] [0.0] == 1.0
