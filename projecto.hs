@@ -43,9 +43,36 @@ somaVectorial = zipWith (+)
 -- ENTREGA 2
 --
 
+-- Em Haskell, um vetor é uma lista [Double] e uma
+-- matriz é uma lista de listas [[Double]]
+
+-- Camada de rede neuronal, com pesos para cada neurónio, e a bias de cada neurónio
+data Layer = Layer {pesos ::[[Double]], 
+                    bias :: [Double]
+                    } deriving (Show, Eq, Ord) -- Retirar Ord se não for preciso
+
+-- Rede neuronal
+type Network = [Layer] -- newtype deve ser usado quando apenas tem um atributo
+
+
+-- Para facilitar, vamos usar uma matriz dos pesos por cada camada (W ∈ Rm×n), 
+-- bem como um vector dos bias (b ∈ Rm). O array de output de cada camada
+-- é definido por:
+-- y = σ(W x + b)
+
 -- | Constrói uma rede neuronal.
 -- Exemplo: length (buildNetwork 2 [4,1] (repeat 0.1)) == 2
--- buildNetwork :: Int -> [Int] -> [Double] -> Network
+buildNetwork :: Int -> [Int] -> [Double] -> Network
+
+buildNetwork _ [] _ = [] -- quando não há mais layers
+buildNetwork inputSize (l:ls) vals = layer : buildNetwork l ls rest -- adiciona layer à network e chama a função recursivamente
+  where
+    numW    = l * inputSize -- obtem numero de weights para criar
+    weights = chunksOf inputSize (take numW vals) -- fazemos chunks de tamanho size, de numW elementos de vals
+    biases  = take l (drop numW vals) -- cria as biases, pegando em l vals, excluindo os que já foram usados como pesos
+    layer   = Layer weights biases -- cria o layer
+    rest    = drop (numW + l) vals -- guarda o resto dos valores que ainda não foram utilizados
+
 
 -- | Diferença entre previsão e alvo (por elemento).
 -- Exemplo: outputError [0.9] [1.0] == [-0.1]
