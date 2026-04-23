@@ -81,7 +81,7 @@ outputError = zipWith (-)
 -- | Erro quadrático médio entre previsão e alvo.
 -- Exemplo: mse [1.0] [0.0] == 1.0
 mse :: [Double] -> [Double] -> Double
-mse y_prev y_esp = sum (map (**2.0) (outputError y_prev y_esp))
+mse y_prev y_esp = sum (map (**2) (outputError y_prev y_esp)) -- **2 para Double, ^2 para Int
 
 -- | MSE médio sobre um conjunto de previsões.
 msePredictions :: [[Double]] -> [[Double]] -> Double
@@ -92,6 +92,7 @@ msePredictions prev_m esp_m = sum mse_list / fromIntegral (length mse_list)
 -- da entrada até à saída: [entrada, act1, act2, ..., saída].
 -- Exemplo: length (forwardPass [0,1] net) == length net + 1
 -- forwardPass :: [Double] -> Network -> [[Double]]
+-- forwardPass (x : xs) net = sigmoid (net pesos * x)
 
 -- | Executa um passo de backpropagation dado uma taxa de aprendizagem, 
 -- o input e o output esperado para um exemplo concreto.
