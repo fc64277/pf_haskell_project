@@ -81,18 +81,24 @@ outputError = zipWith (-)
 -- | Erro quadrático médio entre previsão e alvo.
 -- Exemplo: mse [1.0] [0.0] == 1.0
 mse :: [Double] -> [Double] -> Double
-mse y_prev y_esp = sum (map (**2) (outputError y_prev y_esp)) -- **2 para Double, ^2 para Int
+mse yPrev yEsp = sum (map (**2) (outputError yPrev yEsp)) -- **2 para Double, ^2 para Int
 
 -- | MSE médio sobre um conjunto de previsões.
 msePredictions :: [[Double]] -> [[Double]] -> Double
-msePredictions prev_m esp_m = sum mse_list / fromIntegral (length mse_list)
-  where mse_list = zipWith mse prev_m esp_m
+msePredictions prevM espM = sum mseList / fromIntegral (length mseList)
+  where mseList = zipWith mse prevM espM
 
 -- | Propaga a entrada pela rede e devolve todas as ativações,
 -- da entrada até à saída: [entrada, act1, act2, ..., saída].
 -- Exemplo: length (forwardPass [0,1] net) == length net + 1
--- forwardPass :: [Double] -> Network -> [[Double]]
--- forwardPass (x : xs) net = sigmoid (net pesos * x)
+forwardPass :: [Double] -> Network -> [[Double]]
+forwardPass input = foldl propag [input] -- aplica a propagação da entrada pela rede
+  where 
+    propag accList (Layer weight bias) = 
+      let 
+        lastAcc = last accList -- última ativação
+        newAcc = map sigmoid (somaVectorial bias (multMatrix weight lastAcc)) -- calcular o valor da nova ativação
+      in accList ++ [newAcc] -- colocar nova ativação na lista de ativações
 
 -- | Executa um passo de backpropagation dado uma taxa de aprendizagem, 
 -- o input e o output esperado para um exemplo concreto.
