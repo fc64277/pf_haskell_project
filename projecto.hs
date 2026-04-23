@@ -84,8 +84,9 @@ mse :: [Double] -> [Double] -> Double
 mse y_prev y_esp = sum (map (**2.0) (outputError y_prev y_esp))
 
 -- | MSE médio sobre um conjunto de previsões.
--- msePredictions :: [[Double]] -> [[Double]] -> Double
--- msePredictions (prev : prevs) (esp : esps) = (mse prev esp) : [(msePredictions prevs esps)]
+msePredictions :: [[Double]] -> [[Double]] -> Double
+msePredictions prev_m esp_m = sum mse_list / fromIntegral (length mse_list)
+  where mse_list = zipWith mse prev_m esp_m
 
 -- | Propaga a entrada pela rede e devolve todas as ativações,
 -- da entrada até à saída: [entrada, act1, act2, ..., saída].
