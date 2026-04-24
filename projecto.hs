@@ -103,11 +103,23 @@ forwardPass input = foldl propag [input] -- aplica a propagação da entrada pel
 -- | Executa um passo de backpropagation dado uma taxa de aprendizagem, 
 -- o input e o output esperado para um exemplo concreto.
 backPropagation :: Double -> [Double] -> [Double] -> Network -> Network
-backPropagation _ _ _ [] = [] 
-backPropagation eta input expOut (ls:l) = 
-    where
-        output = forwardPass input net
-        erro = outputError (last output) (last expOut)
+backPropagation eta input expOut net = 
+    let
+      output = forwardPass input net  -- passo 1: foward
+      
+      erro = outputError (last output) expOut -- passo 2: erro final
+      lastDelta = zipWith (*) erro (map sigmoid' (last output))
+      
+      goBack [] _ _ = []
+      goBack _ [] _ = []
+      goBack (rightLayer:layers) (leftAtiv:ativs) rightDelta =  -- passo 3: back
+        let
+          pesosXDeltas = multMatrix (transpose (pesos rightLayer)) rightDelta -- primeira parte da equação dos deltas (somatório)
+          leftDelta = zipWith (*) pesosXDeltas (map sigmoid' leftAtiv)  -- calula os deltas
+          newLayer = Layer [[p - eta * delta * ativ | (p, ativ) <- zip pa leftAtiv] | (pa, delta) <- zip (pesos rightLayer) rightDelta]
+                            [b - eta * delta | (b, delta) <- zip (bias rightLayer) rightDelta]
+        in newLayer : goBack layers ativs leftDelta
+      in reverse (goBack (reverse net) (reverse (init output)) lastDelta)
 
 --
 -- ENTREGA 3
