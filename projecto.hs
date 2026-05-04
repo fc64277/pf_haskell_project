@@ -81,7 +81,9 @@ outputError = zipWith (-)
 -- | Erro quadrático médio entre previsão e alvo.
 -- Exemplo: mse [1.0] [0.0] == 1.0
 mse :: [Double] -> [Double] -> Double
-mse yPrev yEsp = sum (map (**2) (outputError yPrev yEsp)) -- **2 para Double, ^2 para Int
+mse yPrev yEsp = sum (map (**2) errorList) / fromIntegral (length errorList) -- **2 para Double, ^2 para Int
+  where
+    errorList = outputError yPrev yEsp
 
 -- | MSE médio sobre um conjunto de previsões.
 msePredictions :: [[Double]] -> [[Double]] -> Double
@@ -119,7 +121,7 @@ backPropagation eta input expOut net =
           newLayer = Layer [[p - eta * delta * ativ | (p, ativ) <- zip pa leftAtiv] | (pa, delta) <- zip (pesos rightLayer) rightDelta]
                             [b - eta * delta | (b, delta) <- zip (bias rightLayer) rightDelta]
         in newLayer : goBack layers ativs leftDelta
-      in reverse (goBack (reverse net) (reverse (init output)) lastDelta)
+    in reverse (goBack (reverse net) (reverse (init output)) lastDelta)
 
 --
 -- ENTREGA 3
