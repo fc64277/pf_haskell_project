@@ -1,3 +1,4 @@
+import System.Environment (getArgs)
 -- Diogo Borges     64277
 -- Pedro Batalheiro 62271
 
@@ -142,3 +143,22 @@ training it eta (inputMtx, expOutputs) net =
     newNet = foldl (\currentNet (input, output) -> backPropagation eta input output currentNet) net dataset
   -- nova iteração
   in training (it - 1) eta (inputMtx, expOutputs) newNet
+
+train :: FilePath -> IO ()
+train fp = putStrLn "correu train"
+
+predict :: FilePath -> IO ()
+predict fp = putStrLn "correu predict"
+
+test :: IO ()
+test = putStrLn "correu test"
+
+main :: IO ()
+main = do
+  args <- getArgs
+
+  if null args then putStrLn "Não foram passados argumentos."
+  else if head args == "--train" then train (args !! 1)
+  else if head args == "--predict" then predict (args !! 1)
+  else if head args == "--test" then test
+  else putStrLn "Argumentos inválidos."
