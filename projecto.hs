@@ -148,7 +148,18 @@ train :: FilePath -> IO ()
 train fp = putStrLn "correu train"
 
 predict :: FilePath -> IO ()
-predict fp = putStrLn "correu predict"
+predict fp = do
+  line <- readFile fp -- String do ficheiro
+  -- usamos let pois esta não é uma operação de IO
+  let weights = read line :: [([Double], [Double])] -- pesos obtidos a partir da String
+  putStr "Input 1: "
+  strFstInput <- getLine
+  let fstInput = read strFstInput :: Double
+  putStr "Input 2: "
+  strScnInput <- getLine
+  let scnInput = read strScnInput :: Double
+  -- return forwardPass [fstInput, scnInput] net
+  print weights -- eliminar
 
 test :: IO ()
 test = putStrLn "correu test"
