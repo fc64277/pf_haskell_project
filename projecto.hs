@@ -50,7 +50,7 @@ somaVectorial = zipWith (+)
 -- Camada de rede neuronal, com pesos para cada neurónio, e a bias de cada neurónio
 data Layer = Layer {pesos ::[[Double]], 
                     bias :: [Double]
-                    } deriving (Show, Eq, Ord) -- Retirar Ord se não for preciso
+                    } deriving (Show, Read) -- Retirar Ord se não for preciso
 
 -- Rede neuronal
 type Network = [Layer] -- newtype deve ser usado quando apenas tem um atributo
@@ -149,17 +149,27 @@ train fp = putStrLn "correu train"
 
 predict :: FilePath -> IO ()
 predict fp = do
-  line <- readFile fp -- String do ficheiro
-  -- usamos let pois esta não é uma operação de IO
-  let weights = read line :: [([Double], [Double])] -- pesos obtidos a partir da String
+  -- usamos let quando não é uma operação de IO
+  --retirar String do ficheiro
+  conteudo <- readFile fp
+  let rede = read conteudo :: Network
+
+  -- obter Strings dos inputs
   putStr "Input 1: "
-  strFstInput <- getLine
-  let fstInput = read strFstInput :: Double
+  fstInput <- getLine
   putStr "Input 2: "
-  strScnInput <- getLine
-  let scnInput = read strScnInput :: Double
-  -- return forwardPass [fstInput, scnInput] net
-  print weights -- eliminar
+  scnInput <- getLine
+
+  -- converter String dos inputs em Double
+  let inputs = [read fstInput, read scnInput]
+
+  -- obter ativações usando forwardPass, de modo a obter a úlitma previsão
+  let todasAtivacoes = forwardPass inputs rede
+  let previsao = last todasAtivacoes -- A previsão final
+
+  -- arredondar a previsão para um inteiro
+  let resultado = map round previsao :: [Int]
+  putStrLn $ "Output: " ++ show resultado
 
 test :: IO ()
 test = putStrLn "correu test"
