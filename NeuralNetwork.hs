@@ -1,7 +1,7 @@
 -- Diogo Borges     64277
 -- Pedro Batalheiro 62271
 
-module PF.NeuralNetwork
+module NeuralNetwork
 (chunksOf, 
 sigmoid,
 sigmoid',
