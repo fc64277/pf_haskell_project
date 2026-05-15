@@ -145,7 +145,22 @@ training it eta (inputMtx, expOutputs) net =
   in training (it - 1) eta (inputMtx, expOutputs) newNet
 
 train :: FilePath -> IO ()
-train fp = putStrLn "correu train"
+train fp = do
+  --os pesos têm que ser random---------------v
+  let netBefore = buildNetwork 2 [4, 1] (repeat 0.1)
+
+  let expOut = [[0], [1], [1], [0]]
+  let inputs = [[0, 0], [0, 1], [1,0], [1, 1]]
+  let net = training 100000 0.1 (inputs, expOut) netBefore
+
+  writeFile fp (show net)
+
+  let actOut = map (\inp -> last (forwardPass inp net)) inputs
+
+  let previsoes = zip actOut expOut
+  print previsoes
+
+  print (msePredictions actOut expOut)
 
 predict :: FilePath -> IO ()
 predict fp = do
